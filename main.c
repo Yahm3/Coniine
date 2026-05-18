@@ -6,8 +6,6 @@
 #include "coniine.h"
 
 
-void coniine_drawRect(uint32_t *pixels, int x, int y, int width, int height);
-void coniine_drawLine(int var1, int var2, int var3, int var4);
 void draw_to_ppm(uint32_t *pixels, size_t width, size_t height,
     const char *path);
 
@@ -17,7 +15,12 @@ int main(void) {
     coniine_pixels[i] = RANDOM_COLOR;
   } 
 
-  coniine_fill_rect(coniine_pixels, CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_CYAN);
+  //:NOTE: The data
+  coniine_fill_rect(coniine_pixels, (CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN);
+  coniine_drawLine(coniine_pixels, 100, 100, 400, 200, CONIINE_GREEN);
+  coniine_drawRect(coniine_pixels, CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
+
+  //:NOTE: The test 
   draw_to_ppm(coniine_pixels, CONIINE_WIDTH, CONIINE_HEIGHT, path);
   return 0;
 }
@@ -43,24 +46,5 @@ void draw_to_ppm(uint32_t *pixels, size_t width, size_t height,
 
     fwrite(bytes, sizeof(bytes), 1, fp);
   }
-
   fclose(fp);
-}
-
-void coniine_drawLine(int var1, int var2, int var3, int var4){
-  /* NOB_TODO("Implement drawLine"); */
-}
-
-void coniine_drawRect(uint32_t *pixels, int x, int y, int width, int height) {
-  if (width >= 0 && height >= 0) {
-    if (height != 0 && width != 0) {
-      coniine_drawLine(x, y, x + width - 1, y);
-      coniine_drawLine(x + width, y, x + width, y + height - 1);
-      coniine_drawLine(x + width, y + height, x + 1, y + height);
-      coniine_drawLine(x, y + height, x, y + 1);
-    } else {
-      coniine_drawLine(x, y, x + width, y + height);
-    }
-
-  }
 }

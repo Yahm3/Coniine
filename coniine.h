@@ -8,6 +8,9 @@
 #define CONIINE_WIDTH 1000 //:NOTE: Right now I am just using this for testing
 #define CONIINE_HEIGHT 700
 
+#define CONIINE_SWAP(type, x, y) do { type temp = x; x = y; y = temp; } while(0)
+#define CONIINE_ROUND(type, x) ((type)((x) >= 0 ? ((x) + 0.5) : ((x) - 0.5)))
+
 static uint32_t coniine_pixels[CONIINE_WIDTH * CONIINE_HEIGHT];
 
 #define RANDOM_COLOR  	0xFFA88DC2
@@ -18,6 +21,8 @@ static uint32_t coniine_pixels[CONIINE_WIDTH * CONIINE_HEIGHT];
 #define CONIINE_BLACK   0xFFFFFFFF
 
 void coniine_fill_rect(uint32_t *pixels, int x, int y, size_t w, size_t h, uint32_t color);
+void coniine_drawLine(uint32_t *pixels, int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
+void coniine_drawRect(uint32_t *pixels, int x, int y, int width, int height, uint32_t color);
 
 #ifdef CONIINE_IMPLEMENTATION
 
@@ -33,8 +38,56 @@ void coniine_fill_rect(uint32_t *pixels, int x, int y, size_t w, size_t h, uint3
   }
 }
 
-#endif
+void coniine_drawLine(uint32_t *pixels, int xStart, int yStart, int xEnd, int yEnd, uint32_t color){
+  //:NOTE: https://studylib.net/doc/27632019/1---line-drawing-algorithms?p=2
+  int dx = xEnd - xStart;
+  int dy = yEnd - yStart;
 
+  if(dx == 0){
+    //:TODO: Handle this case
+    return;
+  }
+
+  double slope = (double)dy/dx;
+  if(xStart > xEnd){
+    CONIINE_SWAP(int, xStart, xEnd);
+    CONIINE_SWAP(int, yStart, yEnd);
+  }
+
+  for(int x = xStart; x < xEnd; x++){
+    int y = CONIINE_ROUND(int, yStart + (x - xStart) * (-1 * slope)); //:BUG: This could potentially lead to a bug
+    pixels[y * CONIINE_WIDTH + x] = color;
+  }
+}
+
+void coniine_drawRect(uint32_t *pixels, int x, int y, int width, int height, uint32_t color) {
+  int right = x + width - 1;
+  int bottom = y + height - 1;
+
+  if(width <= 0 || height <= 0) return;
+  for(int i = x; i <= right; i++){
+    if(i >= 0 && i < CONIINE_WIDTH){
+      if(y >= 0 && y < CONIINE_HEIGHT){
+	pixels[y * CONIINE_WIDTH + i] = color;
+      }
+      if(bottom >= 0 && bottom < CONIINE_HEIGHT){
+	pixels[bottom * CONIINE_WIDTH + i] = color;
+      }
+    }
+  }
+  for(int j = y; j <= bottom; j++){
+    if(j >= 0 && j < CONIINE_HEIGHT){
+      if(x >= 0 && x < CONIINE_WIDTH){
+	pixels[j * CONIINE_WIDTH + x] = color;
+      }
+      if(right >= 0 && right < CONIINE_HEIGHT){
+	pixels[j * CONIINE_WIDTH + right] = color;
+      }
+    }
+  }
+}
+
+#endif // CONIINE_IMPLEMENTATION
 #endif // CONIINE_H
 
 

@@ -17,7 +17,8 @@ int main(void) {
 
   //:NOTE: The data
   coniine_fill_rect(coniine_pixels, (CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN);
-  coniine_drawLine(coniine_pixels, 100, 100, 400, 200, CONIINE_GREEN);
+  coniine_drawLine(coniine_pixels, 10, 1000, 400, 400, CONIINE_GREEN);
+  coniine_drawLine(coniine_pixels, 100, 100, 1000, 100, CONIINE_CYAN);// Horizontal line (dx =  0)
   coniine_drawRect(coniine_pixels, CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
 
   //:NOTE: The test 
@@ -48,3 +49,4 @@ void draw_to_ppm(uint32_t *pixels, size_t width, size_t height,
   }
   fclose(fp);
 }
+

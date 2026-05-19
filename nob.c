@@ -62,7 +62,7 @@ bool generate_build_h() {
   nob_sb_appendf(&sb, "#define __BUILD_BY__ \"%s\"\n", user);
   nob_sb_appendf(&sb, "#define __BUILD_OS__ \"%s\"\n", os);
 
-  nob_sb_appendf(&sb, "\n#endif // RASEN_BUILD_H\n");
+  nob_sb_appendf(&sb, "\n#endif // CONIINE_BUILD_H\n");
   fwrite(sb.items, 1, sb.count, f);
 
   nob_da_free(sb);

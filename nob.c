@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
   nob_cmd_append(&cmd, "main.c");
   nob_cmd_append(&cmd, "-o");
   nob_cmd_append(&cmd, "main");
+  nob_cmd_append(&cmd, "-lm");
 
   if (!generate_build_h()) {
     return 1;

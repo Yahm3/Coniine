@@ -9,20 +9,35 @@
 void draw_to_ppm(uint32_t *pixels, size_t width, size_t height,
     const char *path);
 
+Vector2 vertices[3] = {
+  {.x = 100, .y = 20},
+  {.x = 200, .y = 280},
+  {.x = 30,  .y = 210}
+};
+
+Vector2 vertices1[3] = {
+  {.x = 100, .y = 300},
+  {.x = 200, .y = 580},
+  {.x = 30,  .y = 610}
+};
+
 int main(void) {
   const char *path = "output.ppm";
   for (size_t i = 0; i < CONIINE_WIDTH * CONIINE_HEIGHT; ++i) {
-    coniine_pixels[i] = RANDOM_COLOR;
+    CONIINE_PIXELS[i] = RANDOM_COLOR;
   } 
 
   //:NOTE: The data
-  coniine_fill_rect(coniine_pixels, (CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN);
-  coniine_drawLine(coniine_pixels, 10, 1000, 400, 400, CONIINE_GREEN);
-  coniine_drawLine(coniine_pixels, 100, 100, 1000, 100, CONIINE_CYAN);// Horizontal line (dx =  0)
-  coniine_drawRect(coniine_pixels, CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
+  coniine_fill_triangleV(vertices[0], vertices[1], vertices[2], CONIINE_BLACK);
+  coniine_fill_triangleI(vertices1[0].x,vertices1[0].y, vertices1[1].x,
+                  vertices1[1].y, vertices1[2].x, vertices1[2].y, CONIINE_BLUE);
+  coniine_fill_rect((CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN);
+  coniine_drawLine(10, 1000, 400, 400, CONIINE_GREEN);
+  coniine_drawLine(100, 100, 1000, 100, CONIINE_CYAN);// Horizontal line (dx =  0)
+  coniine_drawRect(CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
 
   //:NOTE: The test 
-  draw_to_ppm(coniine_pixels, CONIINE_WIDTH, CONIINE_HEIGHT, path);
+  draw_to_ppm(CONIINE_PIXELS, CONIINE_WIDTH, CONIINE_HEIGHT, path);
   return 0;
 }
 

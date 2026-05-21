@@ -53,11 +53,13 @@ bool generate_build_h() {
 
 
   char *os = NULL;
+  char *user = "UNKNOWN";
 #if defined(__linux__) || defined(__unix__)
-  char *user = getenv("USER");
   os = "Linux/Unix";
+  user =  getenv("USER");
 #elif defined(_WIN32) || defined(_WIN64)
   os = "Windows";
+  user =  getenv("USERS");
 #endif
 
   nob_sb_appendf(&sb, "#define __BUILD_BY__ \"%s\"\n", user);

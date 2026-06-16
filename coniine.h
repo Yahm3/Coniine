@@ -20,14 +20,62 @@
 #define CONIINE_MAX3(a,b,c) CONIINE_MAX(a,CONIINE_MAX(b,c))
 #define CONIINE_IS_VALID_PIXEL(x, y) ((x) >= 0 && (x) < CONIINE_WIDTH && (y) >= 0 && (y) < CONIINE_HEIGHT)
 
-//:NOTE: COLORS
-#define RANDOM_COLOR  	0xFFA88DC2
-#define CONIINE_RED   	0xFFFF0000
+#define RANDOM_COLOR    0xFFA88DC2
+
+#define CONIINE_RED     0xFFFF0000
 #define CONIINE_GREEN   0xFF00FF00
 #define CONIINE_BLUE    0xFF0000FF
 #define CONIINE_CYAN    0xFF00FFFF
-#define CONIINE_WHITE   0xFFFFFFFF
-#define CONIINE_BLACK   0xFF000000
+#define CONIINE_YELLOW  0xFFFFFF00
+#define CONIINE_MAGENTA 0xFFFF00FF
+
+#define CONIINE_WHITE       0xFFFFFFFF
+#define CONIINE_BLACK       0xFF000000
+#define CONIINE_LIGHTGRAY   0xFFD3D3D3
+#define CONIINE_GRAY        0xFF808080
+#define CONIINE_DARKGRAY    0xFF404040
+
+#define CONIINE_ORANGE      0xFFFFA500
+#define CONIINE_GOLD        0xFFFFD700
+#define CONIINE_CORAL       0xFFFF7F50
+#define CONIINE_SALMON      0xFFFA8072
+#define CONIINE_BROWN       0xFFA52A2A
+#define CONIINE_MAROON      0xFF800000
+
+#define CONIINE_LIME        0xFF32CD32
+#define CONIINE_DARKGREEN   0xFF006400
+#define CONIINE_OLIVE       0xFF808000
+#define CONIINE_SKYBLUE     0xFF87CEEB
+#define CONIINE_TEAL        0xFF008080
+#define CONIINE_NAVY        0xFF000080
+
+#define CONIINE_PINK        0xFFFFC0CB
+#define CONIINE_HOTPINK     0xFFFF69B4
+#define CONIINE_VIOLET      0xFF9B26B6
+#define CONIINE_PURPLE      0xFF800080
+#define CONIINE_INDIGO      0xFF4B0082
+
+#define CONIINE_NEON_PINK   0xFFFF10F0
+#define CONIINE_NEON_GREEN  0xFF39FF14
+#define CONIINE_ELECTRIC_BLUE 0xFF7DF9FF
+#define CONIINE_CYBER_YELLOW 0xFFFFD300
+#define CONIINE_LASER_RED   0xFFFF003C
+
+#define CONIINE_PASTEL_PINK 0xFFFFD1DC
+#define CONIINE_MINT        0xFF98FF98
+#define CONIINE_LAVENDER    0xFFE6E6FA
+#define CONIINE_PEACH       0xFFFFE5B4
+#define CONIINE_PERIWINKLE  0xFFCCCCFF
+
+#define CONIINE_FOREST      0xFF228B22
+#define CONIINE_WOOD        0xFF8B5A2B
+#define CONIINE_SAND        0xFFF4A460
+#define CONIINE_CLAY        0xFFB66A50
+#define CONIINE_OCEAN       0xFF006994
+
+#define CONIINE_SILVER      0xFFC0C0C0
+#define CONIINE_BRONZE      0xFFCD7F32
+#define CONIINE_COPPER      0xFFB87333
 
 // Structs
 typedef struct {//:TODO: Finish up here
@@ -40,6 +88,11 @@ typedef struct {
   float x, y;
 } Vector2;
 
+typedef enum {
+  CONIINE_FILL, 
+  CONIINE_LINE
+} ConiineDrawMode;
+
 static uint32_t CONIINE_PIXELS[CONIINE_WIDTH * CONIINE_HEIGHT];
 float CONIINE_LERP(float x, float y, float z);
 int CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
@@ -50,7 +103,7 @@ void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, uint32_t color
 void coniine_drawRect( int x, int y, int width, int height, uint32_t color);
 void coniine_fill_triangleV(Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
 void coniine_fill_triangleI(int px1, int py1, int px2, int py2, int px3, int py3, uint32_t color);
-void coniine_fill_circle(const char *mode, int x, int y, int radius, uint32_t color);
+void coniine_fill_circle(ConiineDrawMode mode, int x, int y, int radius, uint32_t color);
 void coniine_drawCircle(int xCenter, int yCenter, int x, int y, uint32_t color);
 
 #ifdef CONIINE_IMPLEMENTATION
@@ -74,22 +127,12 @@ void coniine_drawCircle(int xCenter, int yCenter, int x, int y, uint32_t color) 
   }
 }
 
-void coniine_fill_circle(const char *mode, int xCenter, int yCenter, int radius, uint32_t color) {
+void coniine_fill_circle(ConiineDrawMode mode, int xCenter, int yCenter, int radius, uint32_t color) {
   if(radius < 0){
     printf("Error: radius cannot be less or equal to zero");
     return;
   }
-  if (mode == NULL) {
-    printf("Error: Mode cannot be NULL\n");
-    return;
-  }
-  char *temp = strdup(mode);
-  unsigned char *tptr = (unsigned char*)temp;
-  while(*tptr){
-    *tptr = tolower(*tptr);
-    tptr++;
-  }
-  if(strcmp(temp, "fill") == 0){
+  if(mode == CONIINE_FILL){
     int x = 0, y = radius;
     int d = 3 - 2 * radius;
 
@@ -108,7 +151,7 @@ void coniine_fill_circle(const char *mode, int xCenter, int yCenter, int radius,
       }
       x++;
     }
-  } else if(strcmp(temp,"line") == 0){
+  } else if(mode == CONIINE_LINE){
     int x = 0, y = radius;
     int d = 3 - 2 * radius;
     while(y >= x){
@@ -121,12 +164,7 @@ void coniine_fill_circle(const char *mode, int xCenter, int yCenter, int radius,
       }
       x++;
     }
-  } else {
-    printf("Error: Invalid mode used, you can either use 'fill' or 'line' to fill a circle");
-    free(temp);
-    return;
   }
-  free(temp);
 }
 
 void coniine_fill_triangleI(int px1,int py1,int px2, int py2, int px3, int py3, uint32_t color) {
@@ -239,7 +277,7 @@ void coniine_drawRect(int x, int y, int width, int height, uint32_t color) {
       if(x >= 0 && x < CONIINE_WIDTH){
 	CONIINE_PIXELS[j * CONIINE_WIDTH + x] = color;
       }
-      if(right >= 0 && right < CONIINE_HEIGHT){
+      if(right >= 0 && right < CONIINE_WIDTH){
 	CONIINE_PIXELS[j * CONIINE_WIDTH + right] = color;
       }
     }

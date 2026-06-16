@@ -35,8 +35,8 @@ int main(void) {
   coniine_drawLine(10, 1000, 400, 400, CONIINE_GREEN);
   coniine_drawLine(100, 100, 1000, 100, CONIINE_CYAN);// Horizontal line (dx =  0)
   coniine_drawRect(CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
-  coniine_fill_circle("line", 120*4, 120*3, 50, CONIINE_WHITE);
-  coniine_fill_circle("fill", 220*4, 220*2, 50, CONIINE_WHITE);
+  coniine_fill_circle(CONIINE_FILL, 120*4, 120*3, 50, CONIINE_SILVER);
+  coniine_fill_circle(CONIINE_LINE, 220*4, 220*2, 50, CONIINE_SALMON);
   
   //:NOTE: The test 
   draw_to_ppm(CONIINE_PIXELS, CONIINE_WIDTH, CONIINE_HEIGHT, path);

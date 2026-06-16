@@ -5,9 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
 
 #define CONIINE_WIDTH 1000 //:TEST: Right now I am just using this for testing
 #define CONIINE_HEIGHT 700
+#define CONIINE_PI (float)(22/7)
 
 #define CONIINE_SWAP(type, x, y) do { type temp = x; x = y; y = temp; } while(0)
 #define CONIINE_ROUND(type, x) ((type)((x) >= 0 ? ((x) + 0.5) : ((x) - 0.5)))
@@ -15,6 +18,7 @@
 #define CONIINE_MIN3(a,b,c) CONIINE_MIN(a,CONIINE_MIN(b,c))
 #define CONIINE_MAX(a,b) ((a) > (b) ? (a) : (b))
 #define CONIINE_MAX3(a,b,c) CONIINE_MAX(a,CONIINE_MAX(b,c))
+#define CONIINE_IS_VALID_PIXEL(x, y) ((x) >= 0 && (x) < CONIINE_WIDTH && (y) >= 0 && (y) < CONIINE_HEIGHT)
 
 //:NOTE: COLORS
 #define RANDOM_COLOR  	0xFFA88DC2
@@ -24,6 +28,13 @@
 #define CONIINE_CYAN    0xFF00FFFF
 #define CONIINE_WHITE   0xFFFFFFFF
 #define CONIINE_BLACK   0xFF000000
+
+// Structs
+typedef struct {//:TODO: Finish up here
+  float r;
+  float g;
+  float b;
+} Color;
 
 typedef struct {
   float x, y;
@@ -38,11 +49,87 @@ void coniine_fill_rect(int x, int y, size_t w, size_t h, uint32_t color);
 void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
 void coniine_drawRect( int x, int y, int width, int height, uint32_t color);
 void coniine_fill_triangleV(Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
-void coniine_fill_triangleI(int px1,int py1,int px2, int py2, int px3, int py3, uint32_t color);
-
+void coniine_fill_triangleI(int px1, int py1, int px2, int py2, int px3, int py3, uint32_t color);
+void coniine_fill_circle(const char *mode, int x, int y, int radius, uint32_t color);
+void coniine_drawCircle(int xCenter, int yCenter, int x, int y, uint32_t color);
 
 #ifdef CONIINE_IMPLEMENTATION
-void coniine_fill_triangleI(int px1,int py1,int px2, int py2, int px3, int py3, uint32_t color){
+void coniine_drawCircle(int xCenter, int yCenter, int x, int y, uint32_t color) {
+  int points[8][2] = {
+    {xCenter + x, yCenter + y},
+    {xCenter - x, yCenter + y},
+    {xCenter + x, yCenter - y},
+    {xCenter - x, yCenter - y},
+    {xCenter + y, yCenter + x},
+    {xCenter - y, yCenter + x},
+    {xCenter + y, yCenter - x},
+    {xCenter - y, yCenter - x}
+  };
+  for(int i = 0; i < 8; i++){
+    int px = points[i][0];
+    int py = points[i][1];
+    if(CONIINE_IS_VALID_PIXEL(px, py)){
+      CONIINE_PIXELS[(py * CONIINE_WIDTH) + px] = color;
+    }
+  }
+}
+
+void coniine_fill_circle(const char *mode, int xCenter, int yCenter, int radius, uint32_t color) {
+  if(radius < 0){
+    printf("Error: radius cannot be less or equal to zero");
+    return;
+  }
+  if (mode == NULL) {
+    printf("Error: Mode cannot be NULL\n");
+    return;
+  }
+  char *temp = strdup(mode);
+  unsigned char *tptr = (unsigned char*)temp;
+  while(*tptr){
+    *tptr = tolower(*tptr);
+    tptr++;
+  }
+  if(strcmp(temp, "fill") == 0){
+    int x = 0, y = radius;
+    int d = 3 - 2 * radius;
+
+    while(y >= x){
+      coniine_drawLine(xCenter - x, yCenter - y, xCenter + x, yCenter - y, color);
+      coniine_drawLine(xCenter - x, yCenter + y, xCenter + x, yCenter + y, color);
+
+      coniine_drawLine(xCenter - y, yCenter - x, xCenter + y, yCenter - x, color);
+      coniine_drawLine(xCenter - y, yCenter + x, xCenter + y, yCenter + x, color);
+
+      if(d > 0){
+	y--;
+	d = d + 4 * (x - y) + 10;
+      } else {
+	d = d + 4 * x + 6;
+      }
+      x++;
+    }
+  } else if(strcmp(temp,"line") == 0){
+    int x = 0, y = radius;
+    int d = 3 - 2 * radius;
+    while(y >= x){
+      coniine_drawCircle(xCenter, yCenter, x, y, color);
+      if(d > 0){
+	y--;
+	d = d + 4 * (x - y) + 10;
+      } else {
+	d = d + 4 * x + 6;
+      }
+      x++;
+    }
+  } else {
+    printf("Error: Invalid mode used, you can either use 'fill' or 'line' to fill a circle");
+    free(temp);
+    return;
+  }
+  free(temp);
+}
+
+void coniine_fill_triangleI(int px1,int py1,int px2, int py2, int px3, int py3, uint32_t color) {
   Vector2 p1 = {.x = px1, .y  = py1};
   Vector2 p2 = {.x = px2, .y  = py2};
   Vector2 p3 = {.x = px3, .y  = py3};
@@ -79,7 +166,7 @@ void coniine_fill_triangleV(Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color){
       int w1 = CONIINE_EDGE_CROSS(&p3, &p1, &p) + bias1;
       int w2 = CONIINE_EDGE_CROSS(&p1, &p2, &p) + bias2;
       if(w0 >= 0 && w1 >= 0 && w2 >= 0){// Are we inside or out
-	CONIINE_PIXELS[x * CONIINE_WIDTH + y] = color;
+	CONIINE_PIXELS[y * CONIINE_WIDTH + x] = color;
       }
     }
   }
@@ -165,6 +252,8 @@ void coniine_drawRect(int x, int y, int width, int height, uint32_t color) {
 //---REFERENCES----
 //:TODO: Draw line and shapes that have thickness
 //:TODO: check this out -> https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle
+// https://www.tutorialspoint.com/computer_graphics/bresenhams_circle_generation_algorithm.htm
+// what is a stride: https://medium.com/@oleg.shipitko/what-does-stride-mean-in-image-processing-bba158a72bcd
 // Triangle rasterization: https://youtu.be/k5wtuKWmV48?si=qXgsP8sgcuOi-l56
 // sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
 // https://gabrielgambetta.com/computer-graphics-from-scratch/07-filled-triangles.html

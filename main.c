@@ -16,9 +16,9 @@ Vector2 vertices[3] = {
 };
 
 Vector2 vertices1[3] = {
-  {.x = 100, .y = 300},
-  {.x = 200, .y = 580},
-  {.x = 30,  .y = 610}
+  {.x = 50,  .y = 580},
+  {.x = 275, .y = 190},
+  {.x = 500, .y = 580}
 };
 
 int main(void) {
@@ -29,14 +29,18 @@ int main(void) {
 
   //:NOTE: The data
   coniine_fill_triangleV(vertices[0], vertices[1], vertices[2], CONIINE_BLACK);
-  coniine_fill_triangleI(vertices1[0].x,vertices1[0].y, vertices1[1].x,
-                  vertices1[1].y, vertices1[2].x, vertices1[2].y, CONIINE_BLUE);
+  /* coniine_fill_triangleI(vertices1[0].x,vertices1[0].y, vertices1[1].x, */
+  /*                 vertices1[1].y, vertices1[2].x, vertices1[2].y, CONIINE_BLUE); */
   coniine_fill_rect((CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN);
   coniine_drawLine(10, 1000, 400, 400, CONIINE_GREEN);
   coniine_drawLine(100, 100, 1000, 100, CONIINE_CYAN);// Horizontal line (dx =  0)
   coniine_drawRect(CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
   coniine_fill_circle(CONIINE_FILL, 120*4, 120*3, 50, CONIINE_SILVER);
   coniine_fill_circle(CONIINE_LINE, 220*4, 220*2, 50, CONIINE_SALMON);
+
+
+  int depth = 5;
+  coniine_sierpinski_triangle((Vector2){vertices1[0].x,vertices1[0].y}, (Vector2){vertices1[1].x, vertices1[1].y}, (Vector2){vertices1[2].x, vertices1[2].y}, depth, CONIINE_DARKGREEN);
   
   //:NOTE: The test 
   draw_to_ppm(CONIINE_PIXELS, CONIINE_WIDTH, CONIINE_HEIGHT, path);

@@ -103,6 +103,7 @@ int CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
 bool CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end);
 
 void coniine_fill_rect(int x, int y, size_t w, size_t h, uint32_t color);
+void coniine_drawLineP(int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
 void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd,size_t thickness, uint32_t color);
 void coniine_drawRect( int x, int y, int width, int height, uint32_t color);
 void coniine_fill_triangleV(Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
@@ -231,9 +232,39 @@ void coniine_fill_rect(int x, int y, size_t w, size_t h, uint32_t color){
   }
 }
 
+void coniine_drawLineP(int xStart, int yStart, int xEnd, int yEnd, uint32_t color){
+  int dx = xEnd - xStart;
+  int dy = yEnd - yStart;
+
+  if(dx == 0){
+    if(yStart > yEnd){
+      CONIINE_SWAP(int, yStart, yEnd);
+    }
+    for(int y = yStart; y < yEnd; y++){
+      if(xStart >= 0 && xStart < CONIINE_WIDTH && y >= 0 && y < CONIINE_HEIGHT){
+	CONIINE_PIXELS[y * CONIINE_WIDTH + xStart] = color;
+      }
+    }
+    return;
+  }
+  double slope = (double)dy/dx;
+
+
+  if(xStart > xEnd){
+    CONIINE_SWAP(int, xStart, xEnd);
+    CONIINE_SWAP(int, yStart, yEnd);
+  }
+  for(int x = xStart; x < xEnd; x++){
+    int y = CONIINE_ROUND(int, yStart + (x - xStart) * (slope));
+    if(x >= 0 && x < CONIINE_WIDTH && y >= 0 && y < CONIINE_HEIGHT){
+      CONIINE_PIXELS[y * CONIINE_WIDTH + x] = color;
+    }
+  }
+}
+
 void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, size_t thickness, uint32_t color){
   if (thickness <= 1.0f) {
-        coniine_drawLine(xStart, yStart, xEnd, yEnd, CONIINE_DEFAULT_THICKNESS, color);
+        coniine_drawLineP(xStart, yStart, xEnd, yEnd, color);
         return;
     }
 

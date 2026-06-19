@@ -33,7 +33,7 @@ int main(void) {
   /*                 vertices1[1].y, vertices1[2].x, vertices1[2].y, CONIINE_BLUE); */
   coniine_fill_rect((CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN);
   coniine_drawLine(10, 1000, 400, 400, CONIINE_DEFAULT_THICKNESS, CONIINE_GREEN);
-  coniine_drawLine(100, 100, 1000, 100, 19, CONIINE_CYAN);// Horizontal line (dx =  0)
+  coniine_drawLine(100, 100, 1000, 100, 1, CONIINE_CYAN);// Horizontal line (dx =  0)
   coniine_drawRect(CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED);
   coniine_fill_circle(CONIINE_FILL, 120*4, 120*3, 50, CONIINE_SILVER);
   coniine_fill_circle(CONIINE_LINE, 220*4, 220*2, 50, CONIINE_SALMON);

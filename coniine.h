@@ -6,11 +6,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <ctype.h>
 
 #define CONIINE_WIDTH 1000 //:TEST: Right now I am just using this for testing
 #define CONIINE_HEIGHT 700
 #define CONIINE_PI (float)(22/7)
+#define CONIINE_DEFAULT_THICKNESS 5
 
 #define CONIINE_SWAP(type, x, y) do { type temp = x; x = y; y = temp; } while(0)
 #define CONIINE_ROUND(type, x) ((type)((x) >= 0 ? ((x) + 0.5) : ((x) - 0.5)))
@@ -19,6 +19,7 @@
 #define CONIINE_MAX(a,b) ((a) > (b) ? (a) : (b))
 #define CONIINE_MAX3(a,b,c) CONIINE_MAX(a,CONIINE_MAX(b,c))
 #define CONIINE_IS_VALID_PIXEL(x, y) ((x) >= 0 && (x) < CONIINE_WIDTH && (y) >= 0 && (y) < CONIINE_HEIGHT)
+#define CONIINE_ABS(x) ((x) < 0 ? -(x) : (x))
 
 #define RANDOM_COLOR          0xFFA88DC2
 #define CONIINE_RED           0xFFFF0000
@@ -92,13 +93,17 @@ typedef enum {
   CONIINE_LINE
 } ConiineDrawMode;
 
+typedef struct {
+    size_t width, height;
+} Coniine_Font;
+
 static uint32_t CONIINE_PIXELS[CONIINE_WIDTH * CONIINE_HEIGHT];
 float CONIINE_LERP(float x, float y, float z);
 int CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
 bool CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end);
 
 void coniine_fill_rect(int x, int y, size_t w, size_t h, uint32_t color);
-void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
+void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd,size_t thickness, uint32_t color);
 void coniine_drawRect( int x, int y, int width, int height, uint32_t color);
 void coniine_fill_triangleV(Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
 void coniine_fill_triangleI(int px1, int py1, int px2, int py2, int px3, int py3, uint32_t color);
@@ -137,11 +142,11 @@ void coniine_fill_circle(ConiineDrawMode mode, int xCenter, int yCenter, int rad
     int d = 3 - 2 * radius;
 
     while(y >= x){
-      coniine_drawLine(xCenter - x, yCenter - y, xCenter + x, yCenter - y, color);
-      coniine_drawLine(xCenter - x, yCenter + y, xCenter + x, yCenter + y, color);
+      coniine_drawLine(xCenter - x, yCenter - y, xCenter + x, yCenter - y, CONIINE_DEFAULT_THICKNESS, color);
+      coniine_drawLine(xCenter - x, yCenter + y, xCenter + x, yCenter + y, CONIINE_DEFAULT_THICKNESS, color);
 
-      coniine_drawLine(xCenter - y, yCenter - x, xCenter + y, yCenter - x, color);
-      coniine_drawLine(xCenter - y, yCenter + x, xCenter + y, yCenter + x, color);
+      coniine_drawLine(xCenter - y, yCenter - x, xCenter + y, yCenter - x, CONIINE_DEFAULT_THICKNESS, color);
+      coniine_drawLine(xCenter - y, yCenter + x, xCenter + y, yCenter + x, CONIINE_DEFAULT_THICKNESS, color);
 
       if(d > 0){
 	y--;
@@ -226,35 +231,55 @@ void coniine_fill_rect(int x, int y, size_t w, size_t h, uint32_t color){
   }
 }
 
-void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, uint32_t color){
-  int dx = xEnd - xStart;
-  int dy = yEnd - yStart;
-
-  if(dx == 0){
-    if(yStart > yEnd){
-      CONIINE_SWAP(int, yStart, yEnd);
+void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, size_t thickness, uint32_t color){
+  if (thickness <= 1.0f) {
+        coniine_drawLine(xStart, yStart, xEnd, yEnd, CONIINE_DEFAULT_THICKNESS, color);
+        return;
     }
-    for(int y = yStart; y < yEnd; y++){
-      if(xStart >= 0 && xStart < CONIINE_WIDTH && y >= 0 && y < CONIINE_HEIGHT){
-	CONIINE_PIXELS[y * CONIINE_WIDTH + xStart] = color;
+
+    float radius = thickness / 2.0f;
+    float radiusSq = radius * radius;
+
+    int minX = (xStart < xEnd ? xStart : xEnd) - (int)radius - 1;
+    int maxX = (xStart > xEnd ? xStart : xEnd) + (int)radius + 1;
+    int minY = (yStart < yEnd ? yStart : yEnd) - (int)radius - 1;
+    int maxY = (yStart > yEnd ? yStart : yEnd) + (int)radius + 1;
+
+    if (minX < 0) minX = 0;
+    if (minY < 0) minY = 0;
+    if (maxX >= CONIINE_WIDTH) maxX = CONIINE_WIDTH - 1;
+    if (maxY >= CONIINE_HEIGHT) maxY = CONIINE_HEIGHT - 1;
+
+    float dx = (float)(xEnd - xStart);
+    float dy = (float)(yEnd - yStart);
+    float lenSq = dx * dx + dy * dy;
+
+    for (int y = minY; y <= maxY; y++) {
+      for (int x = minX; x <= maxX; x++) {
+
+	float px = (float)(x - xStart);
+	float py = (float)(y - yStart);
+
+	float t = 0.0f;
+	if (lenSq > 0.0f) {
+	  t = (px * dx + py * dy) / lenSq;
+
+	  if (t < 0.0f) t = 0.0f;
+	  else if (t > 1.0f) t = 1.0f;
+	}
+
+	float closestX = xStart + t * dx;
+	float closestY = yStart + t * dy;
+
+	float distX = x - closestX;
+	float distY = y - closestY;
+	float distSq = (distX * distX) + (distY * distY);
+
+	if (distSq <= radiusSq) {
+	  CONIINE_PIXELS[y * CONIINE_WIDTH + x] = color;
+	}
       }
     }
-    return;
-  }
-
-  double slope = (double)dy/dx;
-
-  if(xStart > xEnd){
-    CONIINE_SWAP(int, xStart, xEnd);
-    CONIINE_SWAP(int, yStart, yEnd);
-  }
-
-  for(int x = xStart; x < xEnd; x++){
-    int y = CONIINE_ROUND(int, yStart + (x - xStart) * (slope)); 
-    if(x >= 0 && x < CONIINE_WIDTH && y >= 0 && y < CONIINE_HEIGHT){
-      CONIINE_PIXELS[y * CONIINE_WIDTH + x] = color;
-    }
-  }
 }
 
 void coniine_drawRect(int x, int y, int width, int height, uint32_t color) {
@@ -284,7 +309,7 @@ void coniine_drawRect(int x, int y, int width, int height, uint32_t color) {
   }
 }
 
-//:NOTE: The visibility of the Sierpinski triangle depends on given depth relative to the the width and height
+//:NOTE: The visibility of the Sierpinski triangle depends on given depth relative to the width and height
 void coniine_sierpinski_triangle(Vector2 p1, Vector2 p2, Vector2 p3, int depth, uint32_t color){
   if(depth < 0){
     printf("Error: depth cannot be less than 0");
@@ -311,7 +336,7 @@ void coniine_sierpinski_triangle(Vector2 p1, Vector2 p2, Vector2 p3, int depth, 
 
 //---REFERENCES----
 //:TODO: Draw line and shapes that have thickness
-//:TODO: check this out -> https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle
+// https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle
 // https://www.tutorialspoint.com/computer_graphics/bresenhams_circle_generation_algorithm.htm
 // what is a stride: https://medium.com/@oleg.shipitko/what-does-stride-mean-in-image-processing-bba158a72bcd
 // Triangle rasterization: https://youtu.be/k5wtuKWmV48?si=qXgsP8sgcuOi-l56

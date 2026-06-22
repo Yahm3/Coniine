@@ -21,61 +21,60 @@
 #define CONIINE_IS_VALID_PIXEL(x, y) ((x) >= 0 && (x) < CONIINE_WIDTH && (y) >= 0 && (y) < CONIINE_HEIGHT)
 #define CONIINE_ABS(x) ((x) < 0 ? -(x) : (x))
 
-#define RANDOM_COLOR          0xFFA88DC2
-#define CONIINE_RED           0xFFFF0000
-#define CONIINE_GREEN         0xFF00FF00
-#define CONIINE_BLUE          0xFF0000FF
-#define CONIINE_CYAN          0xFF00FFFF
-#define CONIINE_YELLOW        0xFFFFFF00
-#define CONIINE_MAGENTA       0xFFFF00FF
+#define COLOR_RED           0xFFFF0000
+#define COLOR_GREEN         0xFF00FF00
+#define COLOR_BLUE          0xFF0000FF
+#define COLOR_CYAN          0xFF00FFFF
+#define COLOR_YELLOW        0xFFFFFF00
+#define COLOR_MAGENTA       0xFFFF00FF
 
-#define CONIINE_WHITE         0xFFFFFFFF
-#define CONIINE_BLACK         0xFF000000
-#define CONIINE_LIGHTGRAY     0xFFD3D3D3
-#define CONIINE_GRAY          0xFF808080
-#define CONIINE_DARKGRAY      0xFF404040
+#define COLOR_WHITE         0xFFFFFFFF
+#define COLOR_BLACK         0xFF000000
+#define COLOR_LIGHTGRAY     0xFFD3D3D3
+#define COLOR_GRAY          0xFF808080
+#define COLOR_DARKGRAY      0xFF404040
 
-#define CONIINE_ORANGE        0xFFFFA500
-#define CONIINE_GOLD          0xFFFFD700
-#define CONIINE_CORAL         0xFFFF7F50
-#define CONIINE_SALMON        0xFFFA8072
-#define CONIINE_BROWN         0xFFA52A2A
-#define CONIINE_MAROON        0xFF800000
+#define COLOR_ORANGE        0xFFFFA500
+#define COLOR_GOLD          0xFFFFD700
+#define COLOR_CORAL         0xFFFF7F50
+#define COLOR_SALMON        0xFFFA8072
+#define COLOR_BROWN         0xFFA52A2A
+#define COLOR_MAROON        0xFF800000
 
-#define CONIINE_LIME          0xFF32CD32
-#define CONIINE_DARKGREEN     0xFF006400
-#define CONIINE_OLIVE         0xFF808000
-#define CONIINE_SKYBLUE       0xFF87CEEB
-#define CONIINE_TEAL          0xFF008080
-#define CONIINE_NAVY          0xFF000080
+#define COLOR_LIME          0xFF32CD32
+#define COLOR_DARKGREEN     0xFF006400
+#define COLOR_OLIVE         0xFF808000
+#define COLOR_SKYBLUE       0xFF87CEEB
+#define COLOR_TEAL          0xFF008080
+#define COLOR_NAVY          0xFF000080
 
-#define CONIINE_PINK          0xFFFFC0CB
-#define CONIINE_HOTPINK       0xFFFF69B4
-#define CONIINE_VIOLET        0xFF9B26B6
-#define CONIINE_PURPLE        0xFF800080
-#define CONIINE_INDIGO        0xFF4B0082
+#define COLOR_PINK          0xFFFFC0CB
+#define COLOR_HOTPINK       0xFFFF69B4
+#define COLOR_VIOLET        0xFF9B26B6
+#define COLOR_PURPLE        0xFF800080
+#define COLOR_INDIGO        0xFF4B0082
 
-#define CONIINE_NEON_PINK     0xFFFF10F0
-#define CONIINE_NEON_GREEN    0xFF39FF14
-#define CONIINE_ELECTRIC_BLUE 0xFF7DF9FF
-#define CONIINE_CYBER_YELLOW  0xFFFFD300
-#define CONIINE_LASER_RED     0xFFFF003C
+#define COLOR_NEON_PINK     0xFFFF10F0
+#define COLOR_NEON_GREEN    0xFF39FF14
+#define COLOR_ELECTRIC_BLUE 0xFF7DF9FF
+#define COLOR_CYBER_YELLOW  0xFFFFD300
+#define COLOR_LASER_RED     0xFFFF003C
 
-#define CONIINE_PASTEL_PINK   0xFFFFD1DC
-#define CONIINE_MINT          0xFF98FF98
-#define CONIINE_LAVENDER      0xFFE6E6FA
-#define CONIINE_PEACH         0xFFFFE5B4
-#define CONIINE_PERIWINKLE    0xFFCCCCFF
+#define COLOR_PASTEL_PINK   0xFFFFD1DC
+#define COLOR_MINT          0xFF98FF98
+#define COLOR_LAVENDER      0xFFE6E6FA
+#define COLOR_PEACH         0xFFFFE5B4
+#define COLOR_PERIWINKLE    0xFFCCCCFF
 
-#define CONIINE_FOREST        0xFF228B22
-#define CONIINE_WOOD          0xFF8B5A2B
-#define CONIINE_SAND          0xFFF4A460
-#define CONIINE_CLAY          0xFFB66A50
-#define CONIINE_OCEAN         0xFF006994
+#define COLOR_FOREST        0xFF228B22
+#define COLOR_WOOD          0xFF8B5A2B
+#define COLOR_SAND          0xFFF4A460
+#define COLOR_CLAY          0xFFB66A50
+#define COLOR_OCEAN         0xFF006994
 
-#define CONIINE_SILVER        0xFFC0C0C0
-#define CONIINE_BRONZE        0xFFCD7F32
-#define CONIINE_COPPER        0xFFB87333
+#define COLOR_SILVER        0xFFC0C0C0
+#define COLOR_BRONZE        0xFFCD7F32
+#define COLOR_COPPER        0xFFB87333
 
 // Structs
 typedef struct {//:TODO: Finish up here
@@ -94,23 +93,381 @@ typedef enum {
 } ConiineDrawMode;
 
 typedef struct {
-    size_t width, height;
+  size_t width;
+  size_t height;
+  const char  *glyph;
 } Coniine_Font;
 
 static uint32_t CONIINE_PIXELS[CONIINE_WIDTH * CONIINE_HEIGHT];
 float CONIINE_LERP(float x, float y, float z);
-int CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
-bool CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end);
+int   CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
+bool  CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end);
 
 void coniine_fill_rect(int x, int y, size_t w, size_t h, uint32_t color);
 void coniine_drawLineP(int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
 void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd,size_t thickness, uint32_t color);
-void coniine_drawRect( int x, int y, int width, int height, uint32_t color);
+void coniine_drawRect( int x, int y, size_t width, size_t height, uint32_t color);
 void coniine_fill_triangleV(Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
 void coniine_fill_triangleI(int px1, int py1, int px2, int py2, int px3, int py3, uint32_t color);
 void coniine_fill_circle(ConiineDrawMode mode, int x, int y, int radius, uint32_t color);
 void coniine_drawCircle(int xCenter, int yCenter, int x, int y, uint32_t color);
 void coniine_sierpinski_triangle(Vector2 p1, Vector2 p2, Vector2 p3,int depth, uint32_t color);
+void coniine_draw_text(const char *text, int x, int y, Coniine_Font font, size_t fontSize, uint32_t color);
+
+#define CONIINE_DEFAULT_FONT_WIDTH 6
+#define CONIINE_DEFAULT_FONT_HEIGHT 6
+
+static char DEFAULT_FONT_GLYPH[128][CONIINE_DEFAULT_FONT_HEIGHT][CONIINE_DEFAULT_FONT_WIDTH] = {
+    ['a'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 1, 0, 0},
+        {0, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+    },
+    ['b'] = {
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 1, 1, 0, 0},
+    },
+    ['c'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['d'] = {
+        {0, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+    },
+    ['e'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 1, 1, 1, 0},
+        {1, 0, 0, 0, 0},
+        {0, 1, 1, 1, 0},
+    },
+    ['f'] = {
+        {0, 0, 1, 1, 0},
+        {0, 1, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0},
+    },
+    ['g'] = {
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+        {0, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['h'] = {
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+    },
+    ['i'] = {
+        {0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+    },
+    ['j'] = {
+        {0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['k'] = {
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 1, 0, 0},
+        {1, 1, 0, 0, 0},
+        {1, 0, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+    },
+    ['l'] = {
+        {0, 1, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 1, 1, 1, 0},
+    },
+    ['m'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1},
+    },
+    ['n'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+    },
+    ['o'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['p'] = {
+        {1, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 1, 1, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0},
+    },
+    ['q'] = {
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+        {0, 0, 0, 1, 0},
+        {0, 0, 0, 1, 0},
+    },
+    ['r'] = {
+        {0, 0, 0, 0, 0},
+        {1, 0, 1, 1, 0},
+        {1, 1, 0, 0, 1},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0},
+    },
+    ['s'] = {
+        {0, 0, 0, 0, 0},
+        {0, 1, 1, 1, 0},
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+        {0, 0, 0, 1, 0},
+        {1, 1, 1, 0, 0},
+    },
+    ['t'] = {
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['u'] = {
+        {0, 0, 0, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+    },
+    ['v'] = {
+        {0, 0, 0, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['w'] = {
+        {0, 0, 0, 0, 0},
+        {1, 0, 0, 0, 1},
+        {1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1},
+        {0, 1, 1, 1, 1},
+    },
+    ['x'] = {
+        {0, 0, 0, 0, 0},
+        {1, 0, 1, 0, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 0, 0},
+        {1, 0, 1, 0, 0},
+        {1, 0, 1, 0, 0},
+    },
+    ['y'] = {
+        {0, 0, 0, 0, 0},
+        {1, 0, 1, 0, 0},
+        {1, 0, 1, 0, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0},
+    },
+    ['z'] = {
+        {0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+        {0, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+    },
+
+    ['A'] = {0},
+    ['B'] = {0},
+    ['C'] = {0},
+    ['D'] = {0},
+    ['E'] = {0},
+    ['F'] = {0},
+    ['G'] = {0},
+    ['H'] = {0},
+    ['I'] = {0},
+    ['J'] = {0},
+    ['K'] = {0},
+    ['L'] = {0},
+    ['M'] = {0},
+    ['N'] = {0},
+    ['O'] = {0},
+    ['P'] = {0},
+    ['Q'] = {0},
+    ['R'] = {0},
+    ['S'] = {0},
+    ['T'] = {0},
+    ['U'] = {0},
+    ['V'] = {0},
+    ['W'] = {0},
+    ['X'] = {0},
+    ['Y'] = {0},
+    ['Z'] = {0},
+
+    ['0'] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['1'] = {
+        {0, 0, 1, 0, 0},
+        {0, 1, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 1, 1, 1, 0},
+    },
+    ['2'] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {0, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+    },
+    ['3'] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['4'] = {
+        {0, 0, 1, 1, 0},
+        {0, 1, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 1, 1, 1, 1},
+        {0, 0, 0, 1, 0},
+        {0, 0, 0, 1, 0},
+    },
+    ['5'] = {
+        {1, 1, 1, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 0, 0},
+        {0, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['6'] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+    ['7'] = {
+        {1, 1, 1, 1, 0},
+        {0, 0, 0, 1, 0},
+        {0, 0, 1, 0, 0},
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0},
+    },
+    ['8'] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+
+    },
+    ['9'] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 0},
+        {0, 1, 1, 1, 0},
+        {0, 0, 0, 1, 0},
+        {0, 1, 1, 0, 0},
+    },
+
+    [','] = {
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 0},
+        {0, 0, 1, 0, 0},
+    },
+
+    ['.'] = {
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0},
+    },
+    ['-'] = {
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 0},
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+    },
+};
+
+static Coniine_Font CONIINE_DEFAULT_FONT = {
+  .width  = CONIINE_DEFAULT_FONT_WIDTH,
+  .height = CONIINE_DEFAULT_FONT_HEIGHT,
+  .glyph = &DEFAULT_FONT_GLYPH[0][0][0]
+};
 
 #ifdef CONIINE_IMPLEMENTATION
 void coniine_drawCircle(int xCenter, int yCenter, int x, int y, uint32_t color) {
@@ -313,7 +670,7 @@ void coniine_drawLine(int xStart, int yStart, int xEnd, int yEnd, size_t thickne
     }
 }
 
-void coniine_drawRect(int x, int y, int width, int height, uint32_t color) {
+void coniine_drawRect(int x, int y, size_t width, size_t height, uint32_t color) {
   int right = x + width - 1;
   int bottom = y + height - 1;
   if(width <= 0 || height <= 0) return;
@@ -360,6 +717,26 @@ void coniine_sierpinski_triangle(Vector2 p1, Vector2 p2, Vector2 p3, int depth, 
   coniine_sierpinski_triangle(p1, m12, m31, depth - 1, color);
   coniine_sierpinski_triangle(m12, p2, m23, depth - 1, color);
   coniine_sierpinski_triangle(m31, m23, p3, depth - 1, color);
+}
+
+void coniine_draw_text(const char *text, int tx, int ty, Coniine_Font font, size_t fontSize, uint32_t color) {
+  size_t text_length = strlen(text);
+  for(size_t i = 0; i < text_length; i++){
+    int x = tx + i*font.width*fontSize;
+    int y = ty;
+    const char *glyph = &font.glyph[text[i]*sizeof(char)*font.width*font.height];
+    for(int dy = 0; (size_t)dy < font.height; dy++){
+      for(int dx = 0; (size_t)dx < font.width; dx++){
+	int px = x + dx*fontSize;
+	int py = y + dy*fontSize;
+	if(dx >= 0 &&  dx < CONIINE_WIDTH && dy >= 0 && dy < CONIINE_HEIGHT){
+	  if(glyph[dy*font.width + dx]){
+	    coniine_fill_rect(px, py, fontSize, fontSize, color);
+	  }
+	}
+      }
+    }
+  }
 }
 
 #endif // CONIINE_IMPLEMENTATION

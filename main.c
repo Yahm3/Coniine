@@ -15,35 +15,20 @@ int main(void) {
     {.x = 30,  .y = 210}
   };
 
-  Vector2 vertices1[3] = {
-    {.x = 50,  .y = 580},
-    {.x = 275, .y = 190},
-    {.x = 500, .y = 580}
-  };
+  Coniine_Canvas cc  = coniine_canvas_create(1000,700);
   const char *path = "output.ppm";
-  for (size_t i = 0; i < CONIINE_WIDTH * CONIINE_HEIGHT; ++i) {
-    CONIINE_PIXELS[i] = COLOR_BLACK;
+  for (size_t i = 0; i < cc.width * cc.height; ++i) {
+    cc.pixels[i] = COLOR_BLACK;
   } 
-  coniine_draw_text("the quick brown fox jumps over the lazy dog",
+
+  coniine_draw_text(&cc,"the quick brown fox jumps over the lazy dog",
       2, 2, CONIINE_DEFAULT_FONT, 3,COLOR_SKYBLUE);
-  /* coniine_fill_triangleV(vertices[0], vertices[1], vertices[2], CONIINE_BLACK); */
-  /* coniine_fill_triangleI(vertices1[0].x,vertices1[0].y, vertices1[1].x, */
-  /*                 vertices1[1].y, vertices1[2].x, vertices1[2].y, CONIINE_BLUE); */
-  /* coniine_fill_rect((CONIINE_WIDTH / 2) + 110, (CONIINE_HEIGHT / 2) + 110, 200, 100, CONIINE_CYAN); */
-  /* coniine_drawLine(10, 1000, 400, 400, CONIINE_DEFAULT_THICKNESS, CONIINE_GREEN); */
-  /* coniine_drawLine(100, 100, 1000, 100, 1, CONIINE_CYAN);// Horizontal line (dx =  0) */
-  /* coniine_drawRect(CONIINE_WIDTH / 2, CONIINE_HEIGHT / 2, 200, 100, CONIINE_RED); */
-  /* coniine_fill_circle(CONIINE_FILL, 120*4, 120*3, 50, CONIINE_SILVER); */
-  /* coniine_fill_circle(CONIINE_LINE, 220*4, 220*2, 50, CONIINE_SALMON); */
-
-
-  /* int depth = 5; */
-  /* coniine_sierpinski_triangle((Vector2){vertices1[0].x,vertices1[0].y}, (Vector2){vertices1[1].x, vertices1[1].y}, (Vector2){vertices1[2].x, vertices1[2].y}, depth, CONIINE_DARKGREEN); */
 
   //:NOTE: The test 
-  draw_to_ppm(CONIINE_PIXELS, CONIINE_WIDTH, CONIINE_HEIGHT, path);
+  draw_to_ppm(cc.pixels, cc.width, cc.height, path);
+  coniine_canvas_destroy(&cc);
   return 0;
-  }
+}
 
 void draw_to_ppm(uint32_t *pixels, size_t width, size_t height,const char *path) {
   FILE *fp = fopen(path, "wb");
@@ -66,5 +51,3 @@ void draw_to_ppm(uint32_t *pixels, size_t width, size_t height,const char *path)
   }
   fclose(fp);
 }
-
-//:TODO: Create folder to put files for testing

@@ -1,3 +1,15 @@
+#ifndef CONIINE_DEF
+#ifdef __cplusplus
+#define CONIINE_DEF extern "C"
+#else
+#define CONIINE_DEF extern
+#endif
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef CONIINE_H
 #define CONIINE_H
 
@@ -78,408 +90,412 @@
 #define COLOR_BRONZE        0xFFCD7F32
 #define COLOR_COPPER        0xFFB87333
 
-typedef struct {
-  float r;
-  float g;
-  float b;
-} Color;
+  typedef struct {
+    float r;
+    float g;
+    float b;
+  } Color;
 
-typedef struct {
-  float x, y;
-} Vector2;
+  typedef struct {
+    float x, y;
+  } Vector2;
 
-typedef enum {
-  CONIINE_FILL, 
-  CONIINE_LINE
-} ConiineDrawMode;
+  typedef enum {
+    CONIINE_FILL, 
+    CONIINE_LINE
+  } ConiineDrawMode;
 
-typedef struct {
-  size_t width;
-  size_t height;
-  const char  *glyph;
-} Coniine_Font;
+  typedef struct {
+    size_t width;
+    size_t height;
+    const char  *glyph;
+  } Coniine_Font;
 
-typedef struct {
-  size_t width;
-  size_t height;
-  uint32_t *pixels;
-} Coniine_Canvas;
+  typedef struct {
+    size_t width;
+    size_t height;
+    uint32_t *pixels;
+  } Coniine_Canvas;
 
-Coniine_Canvas coniine_canvas_create(size_t width, size_t height);
-void coniine_canvas_destroy(Coniine_Canvas *canvas);
+  Coniine_Canvas coniine_canvas_create(size_t width, size_t height);
+  void coniine_canvas_destroy(Coniine_Canvas *canvas);
 
-float CONIINE_LERP(float x, float y, float z);
-int   CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
-bool  CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end);
+  float CONIINE_LERP(float x, float y, float z);
+  int   CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p);
+  bool  CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end);
 
-void coniine_fill_rect(Coniine_Canvas *cc, int x, int y, size_t w, size_t h, uint32_t color);
-void coniine_drawLineP(Coniine_Canvas *cc, int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
-void coniine_drawLine(Coniine_Canvas *cc, int xStart, int yStart, int xEnd, int yEnd,size_t thickness, uint32_t color);
-void coniine_drawRect(Coniine_Canvas *cc,int x, int y, size_t width, size_t height, uint32_t color);
-void coniine_fill_triangleV(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
-void coniine_fill_triangleI(Coniine_Canvas *cc, int px1, int py1, int px2, int py2, int px3, int py3, uint32_t color);
-void coniine_fill_circle(Coniine_Canvas *cc, ConiineDrawMode mode, int x, int y, int radius, uint32_t color);
-void coniine_drawCircle(Coniine_Canvas *cc, int xCenter, int yCenter, int x, int y, uint32_t color);
-void coniine_sierpinski_triangle(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 p3,int depth, uint32_t color);
-void coniine_draw_text(Coniine_Canvas *cc, const char *text, int x, int y, Coniine_Font font, size_t fontSize, uint32_t color);
+  void coniine_fill_rect(Coniine_Canvas *cc, int x, int y, size_t w, size_t h, uint32_t color);
+  void coniine_drawLineP(Coniine_Canvas *cc, int xStart, int yStart, int xEnd, int yEnd, uint32_t color);
+  void coniine_drawLine(Coniine_Canvas *cc, int xStart, int yStart, int xEnd, int yEnd,size_t thickness, uint32_t color);
+  void coniine_drawRect(Coniine_Canvas *cc,int x, int y, size_t width, size_t height, uint32_t color);
+  void coniine_fill_triangleV(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color);
+  void coniine_fill_triangleI(Coniine_Canvas *cc, int px1, int py1, int px2, int py2, int px3, int py3, uint32_t color);
+  void coniine_fill_circle(Coniine_Canvas *cc, ConiineDrawMode mode, int x, int y, int radius, uint32_t color);
+  void coniine_drawCircle(Coniine_Canvas *cc, int xCenter, int yCenter, int x, int y, uint32_t color);
+  void coniine_sierpinski_triangle(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 p3,int depth, uint32_t color);
+  void coniine_draw_text(Coniine_Canvas *cc, const char *text, int x, int y, Coniine_Font font, size_t fontSize, uint32_t color);
 
 #define CONIINE_DEFAULT_FONT_WIDTH 6
 #define CONIINE_DEFAULT_FONT_HEIGHT 6
 
-static char DEFAULT_FONT_GLYPH[128][CONIINE_DEFAULT_FONT_HEIGHT][CONIINE_DEFAULT_FONT_WIDTH] = {
-  ['a'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 1, 0, 0},
-    {0, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-  },
-  ['b'] = {
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 1, 1, 0, 0},
-  },
-  ['c'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 0, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['d'] = {
-    {0, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-  },
-  ['e'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 1, 1, 1, 0},
-    {1, 0, 0, 0, 0},
-    {0, 1, 1, 1, 0},
-  },
-  ['f'] = {
-    {0, 0, 1, 1, 0},
-    {0, 1, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0},
-  },
-  ['g'] = {
-    {0, 1, 1, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['h'] = {
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-  },
-  ['i'] = {
-    {0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-  },
-  ['j'] = {
-    {0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {1, 0, 1, 0, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['k'] = {
-    {1, 0, 0, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 1, 0, 0},
-    {1, 1, 0, 0, 0},
-    {1, 0, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-  },
-  ['l'] = {
-    {0, 1, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 1, 1, 1, 0},
-  },
-  ['m'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 0, 1, 1},
-    {1, 0, 1, 0, 1},
-    {1, 0, 1, 0, 1},
-    {1, 0, 1, 0, 1},
-    {1, 0, 1, 0, 1},
-  },
-  ['n'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-  },
-  ['o'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['p'] = {
-    {1, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 1, 1, 0, 0},
-    {1, 0, 0, 0, 0},
-    {1, 0, 0, 0, 0},
-  },
-  ['q'] = {
-    {0, 1, 1, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {0, 0, 0, 1, 0},
-  },
-  ['r'] = {
-    {0, 0, 0, 0, 0},
-    {1, 0, 1, 1, 0},
-    {1, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0},
-    {1, 0, 0, 0, 0},
-    {1, 0, 0, 0, 0},
-  },
-  ['s'] = {
-    {0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 0},
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {1, 1, 1, 0, 0},
-  },
-  ['t'] = {
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['u'] = {
-    {0, 0, 0, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-  },
-  ['v'] = {
-    {0, 0, 0, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['w'] = {
-    {0, 0, 0, 0, 0},
-    {1, 0, 0, 0, 1},
-    {1, 0, 1, 0, 1},
-    {1, 0, 1, 0, 1},
-    {1, 0, 1, 0, 1},
-    {0, 1, 1, 1, 1},
-  },
-  ['x'] = {
-    {0, 0, 0, 0, 0},
-    {1, 0, 1, 0, 0},
-    {1, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0},
-    {1, 0, 1, 0, 0},
-    {1, 0, 1, 0, 0},
-  },
-  ['y'] = {
-    {0, 0, 0, 0, 0},
-    {1, 0, 1, 0, 0},
-    {1, 0, 1, 0, 0},
-    {1, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0},
-  },
-  ['z'] = {
-    {0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-  },
+  static char DEFAULT_FONT_GLYPH[128][CONIINE_DEFAULT_FONT_HEIGHT][CONIINE_DEFAULT_FONT_WIDTH] = {
+    ['a'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 0, 0},
+      {0, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+    },
+    ['b'] = {
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 1, 1, 0, 0},
+    },
+    ['c'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 0, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['d'] = {
+      {0, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+    },
+    ['e'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 1, 1, 1, 0},
+      {1, 0, 0, 0, 0},
+      {0, 1, 1, 1, 0},
+    },
+    ['f'] = {
+      {0, 0, 1, 1, 0},
+      {0, 1, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 0, 0},
+    },
+    ['g'] = {
+      {0, 1, 1, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+      {0, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['h'] = {
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+    },
+    ['i'] = {
+      {0, 0, 1, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+    },
+    ['j'] = {
+      {0, 0, 1, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {1, 0, 1, 0, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['k'] = {
+      {1, 0, 0, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 1, 0, 0},
+      {1, 1, 0, 0, 0},
+      {1, 0, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+    },
+    ['l'] = {
+      {0, 1, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 1, 1, 1, 0},
+    },
+    ['m'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 0, 1, 1},
+      {1, 0, 1, 0, 1},
+      {1, 0, 1, 0, 1},
+      {1, 0, 1, 0, 1},
+      {1, 0, 1, 0, 1},
+    },
+    ['n'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+    },
+    ['o'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['p'] = {
+      {1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 1, 1, 0, 0},
+      {1, 0, 0, 0, 0},
+      {1, 0, 0, 0, 0},
+    },
+    ['q'] = {
+      {0, 1, 1, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+      {0, 0, 0, 1, 0},
+      {0, 0, 0, 1, 0},
+    },
+    ['r'] = {
+      {0, 0, 0, 0, 0},
+      {1, 0, 1, 1, 0},
+      {1, 1, 0, 0, 1},
+      {1, 0, 0, 0, 0},
+      {1, 0, 0, 0, 0},
+      {1, 0, 0, 0, 0},
+    },
+    ['s'] = {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 1, 0},
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+      {0, 0, 0, 1, 0},
+      {1, 1, 1, 0, 0},
+    },
+    ['t'] = {
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['u'] = {
+      {0, 0, 0, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+    },
+    ['v'] = {
+      {0, 0, 0, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['w'] = {
+      {0, 0, 0, 0, 0},
+      {1, 0, 0, 0, 1},
+      {1, 0, 1, 0, 1},
+      {1, 0, 1, 0, 1},
+      {1, 0, 1, 0, 1},
+      {0, 1, 1, 1, 1},
+    },
+    ['x'] = {
+      {0, 0, 0, 0, 0},
+      {1, 0, 1, 0, 0},
+      {1, 0, 1, 0, 0},
+      {0, 1, 0, 0, 0},
+      {1, 0, 1, 0, 0},
+      {1, 0, 1, 0, 0},
+    },
+    ['y'] = {
+      {0, 0, 0, 0, 0},
+      {1, 0, 1, 0, 0},
+      {1, 0, 1, 0, 0},
+      {1, 0, 1, 0, 0},
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 0, 0},
+    },
+    ['z'] = {
+      {0, 0, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+      {0, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+    },
 
-  ['A'] = {0},
-  ['B'] = {0},
-  ['C'] = {0},
-  ['D'] = {0},
-  ['E'] = {0},
-  ['F'] = {0},
-  ['G'] = {0},
-  ['H'] = {0},
-  ['I'] = {0},
-  ['J'] = {0},
-  ['K'] = {0},
-  ['L'] = {0},
-  ['M'] = {0},
-  ['N'] = {0},
-  ['O'] = {0},
-  ['P'] = {0},
-  ['Q'] = {0},
-  ['R'] = {0},
-  ['S'] = {0},
-  ['T'] = {0},
-  ['U'] = {0},
-  ['V'] = {0},
-  ['W'] = {0},
-  ['X'] = {0},
-  ['Y'] = {0},
-  ['Z'] = {0},
+    ['A'] = {0},
+    ['B'] = {0},
+    ['C'] = {0},
+    ['D'] = {0},
+    ['E'] = {0},
+    ['F'] = {0},
+    ['G'] = {0},
+    ['H'] = {0},
+    ['I'] = {0},
+    ['J'] = {0},
+    ['K'] = {0},
+    ['L'] = {0},
+    ['M'] = {0},
+    ['N'] = {0},
+    ['O'] = {0},
+    ['P'] = {0},
+    ['Q'] = {0},
+    ['R'] = {0},
+    ['S'] = {0},
+    ['T'] = {0},
+    ['U'] = {0},
+    ['V'] = {0},
+    ['W'] = {0},
+    ['X'] = {0},
+    ['Y'] = {0},
+    ['Z'] = {0},
 
-  ['0'] = {
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['1'] = {
-    {0, 0, 1, 0, 0},
-    {0, 1, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0},
-    {0, 1, 1, 1, 0},
-  },
-  ['2'] = {
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {0, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-  },
-  ['3'] = {
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {0, 0, 1, 0, 0},
-    {0, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['4'] = {
-    {0, 0, 1, 1, 0},
-    {0, 1, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {1, 1, 1, 1, 1},
-    {0, 0, 0, 1, 0},
-    {0, 0, 0, 1, 0},
-  },
-  ['5'] = {
-    {1, 1, 1, 0, 0},
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 0, 0},
-    {0, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['6'] = {
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 0, 0},
-    {1, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
-  ['7'] = {
-    {1, 1, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0},
-  },
-  ['8'] = {
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
+    ['0'] = {
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['1'] = {
+      {0, 0, 1, 0, 0},
+      {0, 1, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 1, 0, 0},
+      {0, 1, 1, 1, 0},
+    },
+    ['2'] = {
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {0, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+    },
+    ['3'] = {
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {0, 0, 1, 0, 0},
+      {0, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['4'] = {
+      {0, 0, 1, 1, 0},
+      {0, 1, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {1, 1, 1, 1, 1},
+      {0, 0, 0, 1, 0},
+      {0, 0, 0, 1, 0},
+    },
+    ['5'] = {
+      {1, 1, 1, 0, 0},
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 0, 0},
+      {0, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['6'] = {
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 0, 0},
+      {1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
+    ['7'] = {
+      {1, 1, 1, 1, 0},
+      {0, 0, 0, 1, 0},
+      {0, 0, 1, 0, 0},
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 0, 0},
+      {0, 1, 0, 0, 0},
+    },
+    ['8'] = {
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
 
-  },
-  ['9'] = {
-    {0, 1, 1, 0, 0},
-    {1, 0, 0, 1, 0},
-    {1, 0, 0, 1, 0},
-    {0, 1, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {0, 1, 1, 0, 0},
-  },
+    },
+    ['9'] = {
+      {0, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0},
+      {1, 0, 0, 1, 0},
+      {0, 1, 1, 1, 0},
+      {0, 0, 0, 1, 0},
+      {0, 1, 1, 0, 0},
+    },
 
-  [','] = {
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 1, 0},
-    {0, 0, 1, 0, 0},
-  },
+    [','] = {
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 1, 0},
+      {0, 0, 1, 0, 0},
+    },
 
-  ['.'] = {
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0},
-  },
-  ['-'] = {
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-  },
-};
+    ['.'] = {
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 1, 0, 0},
+    },
+    ['-'] = {
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+      {1, 1, 1, 1, 0},
+      {0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0},
+    },
+  };
 
-static Coniine_Font CONIINE_DEFAULT_FONT = {
-  .width  = CONIINE_DEFAULT_FONT_WIDTH,
-  .height = CONIINE_DEFAULT_FONT_HEIGHT,
-  .glyph = &DEFAULT_FONT_GLYPH[0][0][0]
-};
+  static Coniine_Font CONIINE_DEFAULT_FONT = {
+    .width  = CONIINE_DEFAULT_FONT_WIDTH,
+    .height = CONIINE_DEFAULT_FONT_HEIGHT,
+    .glyph = &DEFAULT_FONT_GLYPH[0][0][0]
+  };
+
+#ifdef __cplusplus
+}
+#endif
 
 #ifdef CONIINE_IMPLEMENTATION
-Coniine_Canvas coniine_canvas_create(size_t width, size_t height) {
+CONIINE_DEF Coniine_Canvas coniine_canvas_create(size_t width, size_t height) {
   Coniine_Canvas canvas;
   canvas.width = width;
   canvas.height = height;
@@ -492,14 +508,14 @@ Coniine_Canvas coniine_canvas_create(size_t width, size_t height) {
   return canvas;
 }
 
-void coniine_canvas_destroy(Coniine_Canvas *cc) {
+CONIINE_DEF void coniine_canvas_destroy(Coniine_Canvas *cc) {
   if (cc && cc->pixels) {
     free(cc->pixels);
     cc->pixels = NULL;
   }
 }
 
-void coniine_drawCircle(Coniine_Canvas *cc, int xCenter, int yCenter, int x, int y, uint32_t color) {
+CONIINE_DEF void coniine_drawCircle(Coniine_Canvas *cc, int xCenter, int yCenter, int x, int y, uint32_t color) {
   int points[8][2] = {
     {xCenter + x, yCenter + y},
     {xCenter - x, yCenter + y},
@@ -519,7 +535,7 @@ void coniine_drawCircle(Coniine_Canvas *cc, int xCenter, int yCenter, int x, int
   }
 }
 
-void coniine_fill_circle(Coniine_Canvas *cc, ConiineDrawMode mode,
+CONIINE_DEF void coniine_fill_circle(Coniine_Canvas *cc, ConiineDrawMode mode,
     int xCenter, int yCenter, int radius, uint32_t color) {
   if(radius < 0){
     printf("Error: radius cannot be less or equal to zero");
@@ -565,7 +581,7 @@ void coniine_fill_circle(Coniine_Canvas *cc, ConiineDrawMode mode,
   }
 }
 
-void coniine_fill_triangleI(Coniine_Canvas *cc, int px1, int py1,
+CONIINE_DEF void coniine_fill_triangleI(Coniine_Canvas *cc, int px1, int py1,
     int px2, int py2, int px3, int py3, uint32_t color) {
   Vector2 p1 = {.x = px1, .y  = py1};
   Vector2 p2 = {.x = px2, .y  = py2};
@@ -573,25 +589,30 @@ void coniine_fill_triangleI(Coniine_Canvas *cc, int px1, int py1,
   coniine_fill_triangleV(cc, p1, p2, p3, color);
 }
 
-bool CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end){
+CONIINE_DEF bool CONIINE_TOP_LEFT_EDGE(Vector2 *start, Vector2 *end){
   Vector2 edge = {end->x - start->x, end->y - start->x};
   bool is_top_edge = edge.y == 0 && edge.x > 0;
   bool is_left_edge = edge.y < 0;
   return is_top_edge || is_left_edge;
 }
 
-int CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p){
+CONIINE_DEF int CONIINE_EDGE_CROSS(Vector2 *a, Vector2 *b, Vector2 *p){
   Vector2 ab = {b->x - a->x, b->y - a->y};
   Vector2 ap = {p->x - a->x, p->y - a->y};
   return ab.x * ap.y - ab.y * ap.x;
 }
 
-void coniine_fill_triangleV(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color){
+CONIINE_DEF void coniine_fill_triangleV(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 p3, uint32_t color){
   // Bound box with all candidate pixels
   int x_min = CONIINE_MIN3(p1.x, p2.x, p3.x);
   int y_min = CONIINE_MIN3(p1.y, p2.y, p3.y);
   int x_max = CONIINE_MAX3(p1.x, p2.x, p3.x);
   int y_max = CONIINE_MAX3(p1.y, p2.y, p3.y);
+
+  x_min = CONIINE_MAX(0, x_min);
+  y_min = CONIINE_MAX(0, y_min);
+  x_max = CONIINE_MIN(x_max, (int)cc->width - 1);
+  y_max = CONIINE_MIN(y_max, (int)cc->height - 1);
 
   int bias0 = CONIINE_TOP_LEFT_EDGE(&p2, &p3) ? 0 : -1;
   int bias1 = CONIINE_TOP_LEFT_EDGE(&p3, &p1) ? 0 : -1;
@@ -610,11 +631,11 @@ void coniine_fill_triangleV(Coniine_Canvas *cc, Vector2 p1, Vector2 p2, Vector2 
   }
 }
 
-float CONIINE_LERP(float x, float y, float z) {
+CONIINE_DEF float CONIINE_LERP(float x, float y, float z) {
   return (1 - z) * x + z * y;
 }
 
-void coniine_fill_rect(Coniine_Canvas *cc, int x, int y, size_t w, size_t h, uint32_t color){
+CONIINE_DEF void coniine_fill_rect(Coniine_Canvas *cc, int x, int y, size_t w, size_t h, uint32_t color){
   if(!cc || !cc->pixels) return;
   for(size_t row = 0; row < h; ++row){
     for(size_t col = 0; col < w; ++col){
@@ -627,7 +648,7 @@ void coniine_fill_rect(Coniine_Canvas *cc, int x, int y, size_t w, size_t h, uin
   }
 }
 
-void coniine_drawLineP(Coniine_Canvas *cc, int xStart, int yStart ,int xEnd, int yEnd, uint32_t color){
+CONIINE_DEF void coniine_drawLineP(Coniine_Canvas *cc, int xStart, int yStart ,int xEnd, int yEnd, uint32_t color){
   int dx = xEnd - xStart;
   int dy = yEnd - yStart;
 
@@ -656,7 +677,7 @@ void coniine_drawLineP(Coniine_Canvas *cc, int xStart, int yStart ,int xEnd, int
   }
 }
 
-void coniine_drawLine(Coniine_Canvas *cc, int xStart, int yStart,int xEnd,
+CONIINE_DEF void coniine_drawLine(Coniine_Canvas *cc, int xStart, int yStart,int xEnd,
     int yEnd, size_t thickness, uint32_t color) {
   if (thickness <= 1.0f) {
     coniine_drawLineP(cc, xStart, yStart, xEnd, yEnd, color);
@@ -708,7 +729,7 @@ void coniine_drawLine(Coniine_Canvas *cc, int xStart, int yStart,int xEnd,
   }
 }
 
-void coniine_drawRect(Coniine_Canvas *cc, int x, int y,
+CONIINE_DEF void coniine_drawRect(Coniine_Canvas *cc, int x, int y,
     size_t width, size_t height, uint32_t color) {
   int right = x + width - 1;
   int bottom = y + height - 1;
@@ -737,7 +758,7 @@ void coniine_drawRect(Coniine_Canvas *cc, int x, int y,
 }
 
 //:NOTE: The visibility of the Sierpinski triangle depends on given depth relative to the width and height
-void coniine_sierpinski_triangle(Coniine_Canvas *cc, Vector2 p1, Vector2 p2,
+CONIINE_DEF void coniine_sierpinski_triangle(Coniine_Canvas *cc, Vector2 p1, Vector2 p2,
     Vector2 p3, int depth, uint32_t color){
   if(depth < 0){
     printf("Error: depth cannot be less than 0");
@@ -759,7 +780,7 @@ void coniine_sierpinski_triangle(Coniine_Canvas *cc, Vector2 p1, Vector2 p2,
   coniine_sierpinski_triangle(cc, m31, m23, p3, depth - 1, color);
 }
 
-void coniine_draw_text(Coniine_Canvas *cc, const char *text, int tx, int ty,
+CONIINE_DEF void coniine_draw_text(Coniine_Canvas *cc, const char *text, int tx, int ty,
     Coniine_Font font, size_t fontSize, uint32_t color) {
   size_t text_length = strlen(text);
   for(size_t i = 0; i < text_length; i++){
@@ -770,7 +791,7 @@ void coniine_draw_text(Coniine_Canvas *cc, const char *text, int tx, int ty,
       for(int dx = 0; (size_t)dx < font.width; dx++){
 	int px = x + dx*fontSize;
 	int py = y + dy*fontSize;
-	if(dx >= 0 &&  dx < cc->width && dy >= 0 && dy < cc->height){
+	if(CONIINE_IS_VALID_PIXEL(cc, px, py)){
 	  if(glyph[dy*font.width + dx]){
 	    coniine_fill_rect(cc, px, py, fontSize, fontSize, color);
 	  }
